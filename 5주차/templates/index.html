@@ -105,7 +105,7 @@
               let num = rows[i][["num"]];
               let done = rows[i][["done"]];
               console.log(bucket, num, done);
-
+              // 기능을 하는 것과 아닌 것을 구분하기
               let temp_html = ``;
               if (done == 0) {
                 temp_html = `<li>
@@ -121,6 +121,13 @@
               } else {
                 temp_html = `<li>
                                 <h2 class="done">✅ ${bucket}</h2>
+                                <button
+                                onclick="cancel_bucket(${num})"
+                                type="button"
+                                class="btn btn-outline-danger"
+                                >
+                                취소!
+                                </button>
                             </li>`;
               }
               $("#bucket-list").append(temp_html);
@@ -145,7 +152,18 @@
         $.ajax({
           type: "POST",
           url: "/bucket/done",
-          data: { num_give: num },
+          data: { num_give: num, done: 0 }, //상수는
+          success: function (response) {
+            alert(response["msg"]);
+            window.location.reload();
+          },
+        });
+      }
+      function cancel_bucket(num) {
+        $.ajax({
+          type: "POST",
+          url: "/bucket/done",
+          data: { num_give: num, done: 1 }, //제가 생각하는 기준이여..?
           success: function (response) {
             alert(response["msg"]);
             window.location.reload();
